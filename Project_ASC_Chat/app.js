@@ -87,7 +87,7 @@ app.get('/chats/:id',function(request,response){
 			console.log("[test] 프로젝트 이름 출력 : " + projectName);
 			console.log("[test] 프로젝트 이름 출력 (세션) : " + request.session.projectName); 
 			
-			response.render('index', {
+			response.render('chatView', {
 				  private: true,
 				  userName : userName,
 				  userId : userId,
@@ -108,7 +108,6 @@ app.get("/minutesDownload/:file",function(request,response){
 	var filepath = __dirname + '/minutesFile/' + fileName;
 	console.log("들어오는지 확인" + filepath);
 	response.download(filepath,fileName,function(err){
-		console.log("다운로드 들어오긴하니");
 		if (err) throw err;
 	});
 });
@@ -156,7 +155,7 @@ io.sockets.on('connection',function(socket){
 			console.log(userSockets);
 			
 			msg = { 
-					noticeEnter : userName + "님이 입장하셨습니다. [참여인원 수 : " + rooms[roomNum].numUsers + "]"
+					noticeEnter : userName + "님이 입장하셨습니다."
 					};
 			io.sockets.in(roomNum).emit('noticeMessageEnter',msg);
 			
@@ -247,7 +246,7 @@ io.sockets.on('connection',function(socket){
 		--rooms[roomNum].numUsers;
 		rooms[roomNum].removeMember(socket.userId);
 		msg = { 
-				noticeExit : userName + "님이 퇴장하셨습니다. [남은인원 수 : " + rooms[roomNum].numUsers + "]"
+				noticeExit : userName + "님이 퇴장하셨습니다."
 				};
 		socket.broadcast.to(roomNum).emit('noticeMessageExit',msg);
 	});

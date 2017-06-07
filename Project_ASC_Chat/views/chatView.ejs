@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Test Chat - <%= projectName %> 의 채팅창</title>
+<title> ASC RealTime Chat - <%= projectName %> 의 채팅창</title>
 <head>
 <!-- Bootstrap Core CSS -->
 <link rel="stylesheet"
@@ -28,6 +28,7 @@
 
 <style>
 #page-wrapper {
+	padding-top : 20px;
 	margin: 0;
 }
 
@@ -97,28 +98,12 @@
 <div id="page-wrapper">
   <div class="row">
     <div class="col-sm-7">
-      <div data-role="page">
-        <div data-role="header">
-          <h1>Chat Test</h1>
-        </div>
-        <div data-role="content">
-          <h3>User ID</h3>
-          <h4>아이디 쓰고 스타트챗 눌러라!!!!!</h4>
-          <input id="name" />
-          <h5>가져와지는지 확인...</h5>
-          <input id="userId" value="<%= userId %>" />
-          <input id="userName" value="<%= userName %>" />
-          <input id="projectId" value="<%= projectId %>" />
-          <input id="projectName" value="<%= projectName %>" />
-          <input id="fullId" value="<%= fullId %>" />
-          <input id="userSocket" value="<%= userSocket %>" />
-          <a class="btn btn-primary"
-            data-role="button" href="#chatPage">Start Chat</a>
-          <h2>현재 접속자는 <%= userId %>,<%= userName %>이며 접속하신 시간은 <%= clock %> 입니다</h2>
-        </div>
-      </div>
-
-
+          <input id="userId" type="hidden" value="<%= userId %>" />
+          <input id="userName" type="hidden" value="<%= userName %>" />
+          <input id="projectId" type="hidden" value="<%= projectId %>" />
+          <input id="projectName" type="hidden" value="<%= projectName %>" />
+          <input id="fullId" type="hidden" value="<%= fullId %>" />
+          <input id="userSocket" type="hidden" value="<%= userSocket %>" />
       <!-- /.panel -->
       <div class="row">
         <div class="col-sm-3" style="padding-right : 0">
