@@ -64,7 +64,7 @@ app.get('/chats/:id',function(request,response){
 	var parsedId = fullId.split("_");
 	var projectId = fullId[0]; // 프로젝트번호
 	var projectName;
-	var userId = request.cookies.userCookie;
+	var userId = request.cookies.userIdCookie;
 	var userName;
 	// rooms[projectId] = new Room(fullId,projectId);
 	var clock = moment().format('LLLL');
