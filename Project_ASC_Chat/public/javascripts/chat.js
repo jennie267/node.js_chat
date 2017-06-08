@@ -107,16 +107,17 @@ $(function() {
     		userSocket : userSocket
     	});
     
-    socket.on("noticeMessageEnter",function(data){
-        console.log(data.noticeEnter);
-        $("#userStatus").html("<small>"+data.noticeEnter + "</small><br>");
-        $("#userStatus").fadeOut(1000);
-    });
-    socket.on("noticeMessageExit",function(data){
-        console.log(data.noticeExit);
-        $("#userStatus").append("<small>"+data.noticeExit + "</small><br>");
-        $("#userStatus").fadeOut(1000);
-    });
+//    socket.on("noticeMessageEnter",function(data){
+//        console.log(data.noticeEnter);
+//        console.log("왜 알림이 안뜰까");
+//        $("#userStatus").html("<small>"+data.noticeEnter + "</small><br>");
+//        $("#userStatus").fadeOut(1000);
+//    });
+//    socket.on("noticeMessageExit",function(data){
+//        console.log(data.noticeExit);
+//        $("#userStatus").append("<small>"+data.noticeExit + "</small><br>");
+//        $("#userStatus").fadeOut(1000);
+//    });
     
     socket.on("sendMessageOthers",function(data){
     	var userSockets = data.userSockets;
@@ -173,6 +174,7 @@ $(function() {
     			    + msg + '</small><br>' );
     	$el.data('userName',userName);
     	setTimeout(100,postMessage($el));
+    	$(".user-list").height(462);
     }
     
     function postMessage(el) {
@@ -190,40 +192,11 @@ $(function() {
     		return $(this).data('userName') === userName;
     	}).fadeOut(100,function(){
     		$(this).remove();
-    	})
+    	});
     }
     
     socket.on('loadContent',function(data){
-    	var output = "";
-    	if(userName === data.userName) {
-          output += "<li class='right clearfix'>";
-  	      output += "<span class='chat-img pull-right'>";
-  	      output += "<img src='http://placehold.it/50/FA6F57/fff' alt='User Avatar' class='img-circle' />";
-  	      output += "</span>";
-  	      output += "<div class='chat-body clearfix'>";
-  	      output += "<div class='header'>";
-  	      output += "<strong class='primary-font'> "+ data.userName +"</strong>";
-  	      output += "<small class='pull-right text-muted'>";
-  	      output += "<i class='fa fa-clock-o fa-fw'></i> "+ data.date +" </small></div>";
-  	      output += "    <p>" + data.message + "</p>";
-  	      output += "</div> </li>";
-  	      $(output).appendTo("#content");
-    	}
-    	else {
-    	  output += "<li class='left clearfix'>";
-  	      output += "<span class='chat-img pull-left'>";
-  	      output += "<img src='http://placehold.it/50/55C1E7/fff' alt='User Avatar' class='img-circle' />";
-  	      output += "</span>";
-  	      output += "<div class='chat-body clearfix'>";
-  	      output += "<div class='header'>";
-  	      output += "<strong class='primary-font'> "+ data.userName +"</strong>";
-  	      output += "<small class='pull-right text-muted'>";
-  	      output += "<i class='fa fa-clock-o fa-fw'></i> "+ data.date +" </small></div>";
-  	      output += "    <p>" + data.message + "</p>";
-  	      output += "</div> </li>";
-  	      $(output).appendTo("#content");
-    	}
-    	$('#scrollDiv').scrollTop($('#scrollDiv').prop('scrollHeight'));
+    	loadContent(data);
     });
     
     function loadContent(data) {
@@ -287,6 +260,16 @@ $(function() {
         if (forText)
           return COLORS_TEXT[index];
         return COLORS[index];
+      }
+    
+    socket.on('user left', function(data){
+        removeUserFromList(data.userName);
+      });
+    
+    function removeUserFromList(userName) {
+        $('.user-preview').filter(function(i){
+          return $(this).data('userName') === userName;
+        }).remove();
       }
     
    }); // connect

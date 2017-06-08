@@ -132,6 +132,7 @@ io.sockets.on('connection',function(socket){
 			socket.userId = userId;
 			socket.userName = userName;
 			socket.roomNum = roomNum;
+			socket.fullId = fullId;
 			
 			if(rooms[roomNum] === undefined) {
 				console.log("새 방 팝니다. 방 번호 =" + roomNum );
@@ -154,10 +155,10 @@ io.sockets.on('connection',function(socket){
 			userSockets.push(userSocket);
 			console.log(userSockets);
 			
-			var msg = { 
-					noticeEnter : userName + "님이 입장하셨습니다."
-					};
-			socket.broadcast.to(roomNum).emit('noticeMessageEnter',msg);
+//			var msg = { 
+//					noticeEnter : userName + "님이 입장하셨습니다."
+//					};
+//			socket.broadcast.to(roomNum).emit('noticeMessageEnter',msg);
 			
 			try{
 			    fs.mkdirSync('chatting');
@@ -170,7 +171,7 @@ io.sockets.on('connection',function(socket){
 			    if ( e.code != 'EEXIST' ) throw e; // 존재할경우 패스처리함.
 			}
 			
-			var fileName = 'chatting/ChatContent_'+roomNum+'.txt';
+			var fileName = 'chatting/'+fullId+'.txt';
 			var fileName2 = 'minutesFile/minutes_'+roomNum+'_'+userName+'.txt';
 			var text = "";
 			 
@@ -196,6 +197,7 @@ io.sockets.on('connection',function(socket){
 	
 	socket.on('sendMessage',function(data){
 		 var roomNum = socket.roomNum;
+		 var fullId = socket.fullId;
 		 console.log("참여한 사람들.." + userSockets);
 		 var clock = moment().format('LLLL');
 		 
@@ -213,7 +215,7 @@ io.sockets.on('connection',function(socket){
 			 date : clock
 		 });
 		
-		 var fileName = 'chatting/ChatContent_'+roomNum+'.txt';
+		 var fileName = 'chatting/'+fullId+'.txt';
 		 var text = clock +"///"+ data.userName + "///"  + data.message + "\n";
 		 
 		 fs.appendFile(fileName,text,'utf8',function(err){
@@ -245,15 +247,19 @@ io.sockets.on('connection',function(socket){
 		socket.leave(roomNum);
 		--rooms[roomNum].numUsers;
 		rooms[roomNum].removeMember(userName);
-		var msg = { 
-				noticeExit : userName + "님이 퇴장하셨습니다."
-				};
-		socket.broadcast.to(roomNum).emit('noticeMessageExit',msg);
+//		var msg = { 
+//				noticeExit : userName + "님이 퇴장하셨습니다."
+//				};
+		//socket.broadcast.to(roomNum).emit('noticeMessageExit',msg);
+		socket.broadcast.to(roomNum).emit('user left', {
+	          userName: userName
+	        });
 	});
 	
 	socket.on('loadContent',function(){
 		var roomNum = socket.roomNum;
-		var fileName = 'chatting/ChatContent_'+roomNum+'.txt';
+		var fullId = socket.fullId;
+		var fileName = 'chatting/'+fullId+'.txt';
 		
 		var rl = readline.createInterface({
 			input : fs.createReadStream(fileName)
@@ -265,7 +271,7 @@ io.sockets.on('connection',function(socket){
 			var date = splitedContent[0];
 			var userName = splitedContent[1];
 			var message = splitedContent[2];
-			io.sockets.in(roomNum).emit('loadContent',{
+			socket.emit('loadContent',{
 				date : date,
 				userName : userName,
 				message : message
