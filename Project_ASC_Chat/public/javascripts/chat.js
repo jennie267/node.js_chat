@@ -24,6 +24,9 @@ $(function() {
     var lastTypingTime;
     var canAddType = true;
     
+    
+    
+    
     /**
      * 뷰 이벤트
      */
@@ -91,6 +94,24 @@ $(function() {
         window.open(url, "_blank");
     });
     
+    $("#notification").click(function(){
+    	console.log("알림온 클릭");
+    	//데스크탑 알림 권한 요청
+        Notification.requestPermission(function (result) {
+
+        //요청을 거절하면,
+        if (result === 'denied') {
+           return;
+         }
+        //요청을 허용하면,
+        else {
+           //데스크탑 알림 권한 요청 버튼을 비활성화
+        	$("#notification").attr('disabled', 'disabled');
+           return;
+         }
+      });
+    });
+    
     /**
      * socket
      */
@@ -106,18 +127,6 @@ $(function() {
     		userName : userName,
     		userSocket : userSocket
     	});
-    
-//    socket.on("noticeMessageEnter",function(data){
-//        console.log(data.noticeEnter);
-//        console.log("왜 알림이 안뜰까");
-//        $("#userStatus").html("<small>"+data.noticeEnter + "</small><br>");
-//        $("#userStatus").fadeOut(1000);
-//    });
-//    socket.on("noticeMessageExit",function(data){
-//        console.log(data.noticeExit);
-//        $("#userStatus").append("<small>"+data.noticeExit + "</small><br>");
-//        $("#userStatus").fadeOut(1000);
-//    });
     
     socket.on("sendMessageOthers",function(data){
     	var userSockets = data.userSockets;
@@ -143,7 +152,6 @@ $(function() {
     
     socket.on("sendMessageMine",function(data){
     	var userSockets = data.userSockets;
-    	console.log(userSockets);
     	console.log("뷰에서의 소켓아이디 : "+socket.id);
     	var output = "";
     	output += "<li class='right clearfix'>";
@@ -271,6 +279,31 @@ $(function() {
           return $(this).data('userName') === userName;
         }).remove();
       }
+    
+    socket.on('deskNotification',function(data){
+    	console.log("알림 소켓 뷰 확인");
+    	var message = data.message;
+    	var userName = data.userName;
+    	var date = data.clock;
+    	console.log("알림소켓 값 확인" + userName + message + date);
+    	var icon = "/images/noimage.png";
+    	
+        if (message !== null && message.length > 0) {
+            
+            var options = {
+                body : userName + " : " + message,
+                icon : icon
+            }
+           
+            //데스크탑 알림 요청
+            var notification = new Notification(projectName+"의 채팅 알림", options);
+            
+            //알림 후 5초뒤 닫힘
+            setTimeout(function () {
+                notification.close();
+            }, 5000);
+        }
+    });
     
    }); // connect
     

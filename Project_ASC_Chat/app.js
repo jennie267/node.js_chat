@@ -155,11 +155,6 @@ io.sockets.on('connection',function(socket){
 			userSockets.push(userSocket);
 			console.log(userSockets);
 			
-//			var msg = { 
-//					noticeEnter : userName + "님이 입장하셨습니다."
-//					};
-//			socket.broadcast.to(roomNum).emit('noticeMessageEnter',msg);
-			
 			try{
 			    fs.mkdirSync('chatting');
 			}catch(e){
@@ -202,14 +197,18 @@ io.sockets.on('connection',function(socket){
 		 var clock = moment().format('LLLL');
 		 
 		 socket.emit('sendMessageMine',{
-			 userSockets : userSockets,
 			 message : data.message,
 			 userName : data.userName,
 			 date : clock
 		 });
 		 
 		 socket.broadcast.to(roomNum).emit('sendMessageOthers',{
-			 userSockets : userSockets,
+			 message : data.message,
+			 userName : data.userName,
+			 date : clock
+		 });
+		 
+		 socket.broadcast.to(roomNum).emit('deskNotification',{
 			 message : data.message,
 			 userName : data.userName,
 			 date : clock
@@ -247,10 +246,7 @@ io.sockets.on('connection',function(socket){
 		socket.leave(roomNum);
 		--rooms[roomNum].numUsers;
 		rooms[roomNum].removeMember(userName);
-//		var msg = { 
-//				noticeExit : userName + "님이 퇴장하셨습니다."
-//				};
-		//socket.broadcast.to(roomNum).emit('noticeMessageExit',msg);
+		
 		socket.broadcast.to(roomNum).emit('user left', {
 	          userName: userName
 	        });
