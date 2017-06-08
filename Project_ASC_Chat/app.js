@@ -154,10 +154,10 @@ io.sockets.on('connection',function(socket){
 			userSockets.push(userSocket);
 			console.log(userSockets);
 			
-			msg = { 
+			var msg = { 
 					noticeEnter : userName + "님이 입장하셨습니다."
 					};
-			io.sockets.in(roomNum).emit('noticeMessageEnter',msg);
+			socket.broadcast.to(roomNum).emit('noticeMessageEnter',msg);
 			
 			try{
 			    fs.mkdirSync('chatting');
@@ -244,8 +244,8 @@ io.sockets.on('connection',function(socket){
 		var roomNum = socket.roomNum;
 		socket.leave(roomNum);
 		--rooms[roomNum].numUsers;
-		rooms[roomNum].removeMember(socket.userId);
-		msg = { 
+		rooms[roomNum].removeMember(userName);
+		var msg = { 
 				noticeExit : userName + "님이 퇴장하셨습니다."
 				};
 		socket.broadcast.to(roomNum).emit('noticeMessageExit',msg);
