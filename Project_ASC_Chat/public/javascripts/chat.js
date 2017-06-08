@@ -1,4 +1,5 @@
 $(function() {
+	
     // ChatServer 연결  
     var socket = io();
     
