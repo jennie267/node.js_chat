@@ -32,7 +32,7 @@ var client = mysql.createConnection({
 });
 
 var rooms = {};
-var userSockets = new Array();
+var userSockets = [];
 
 server.listen(port,function(){
 	console.log("connect server : " + port);
