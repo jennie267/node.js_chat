@@ -24,20 +24,18 @@ $(function() {
     var lastTypingTime;
     var canAddType = true;
     
-    
-    
+    /** socket - 채팅방 내용 load */
+    socket.emit('loadContent');
     
     /**
      * 뷰 이벤트
      */
     
-    socket.emit('loadContent');
-    
     // 메시지 전송버튼 클릭 이벤트 (JSON 통신)
     $("#chatsend").click(function (e) {
     	
+    	/** socket - 채팅 전송 */
     	socket.emit("sendMessage", {
-        //name: $("#name").val(),
     	projectId : projectId,
     	userName : userName,
         message: $("#messageInput").val()
@@ -52,10 +50,10 @@ $(function() {
   		  $(this).blur();
   		  // SEND 버튼의 클릭 이벤트를 실행한다
   		  $("#chatsend").click();
-  		  //$("#message").focus();
   		  }
   	});
     
+    // 메세지 입력중 이벤트
     $("#messageInput").keydown(function(e){
     	updateTyping();
     });
@@ -78,6 +76,7 @@ $(function() {
         }, TYPING_TIMER);
       }
     
+    // 회의록 저장 이벤트
     $("#minutesSave").click(function(){
     	console.log("저장하기 누름");
     	socket.emit("chatMemoSave", {
@@ -88,37 +87,41 @@ $(function() {
           });
     });
     
+    // 회의록 다운로드 이벤트
     $("#minutesDownload").click(function(){
     	console.log("다운로드 누름");
     	var url = "/minutesDownload/minutes_" + projectId + "_" + userName;  
         window.open(url, "_blank");
     });
     
+    // 데스크탑 알림 이벤트
     $("#notification").click(function(){
     	console.log("알림온 클릭");
     	//데스크탑 알림 권한 요청
         Notification.requestPermission(function (result) {
 
-        //요청을 거절하면,
+        //요청 거절
         if (result === 'denied') {
            return;
          }
-        //요청을 허용하면,
+        //요청 허용
         else {
            //데스크탑 알림 권한 요청 버튼을 비활성화
         	$("#notification").attr('disabled', 'disabled');
+        	$("#notification").css('background-color','#E5E5E5')
            return;
          }
       });
     });
     
+    
     /**
      * socket
      */
- // socket에 이벤트 리스너 등록(메시지 수신)
     socket.on("connect",function(){
     	userSocket = socket.id;
     	socket.emit("join",projectId);
+    	/** socket - 채팅방 입장 */
     	socket.emit("enterChatting",{
     		fullId : fullId,
     		projectId : projectId,
@@ -127,7 +130,8 @@ $(function() {
     		userName : userName,
     		userSocket : userSocket
     	});
-    
+    	
+    /** socket - 다른 사람 채팅 왼쪽 출력 */
     socket.on("sendMessageOthers",function(data){
     	var userSockets = data.userSockets;
     	console.log(userSockets);
@@ -150,6 +154,7 @@ $(function() {
 	        $('#scrollDiv').scrollTop($('#scrollDiv').prop('scrollHeight'));
     });
     
+    /** socket - 본인 채팅 오른쪽 출력 */
     socket.on("sendMessageMine",function(data){
     	var userSockets = data.userSockets;
     	console.log("뷰에서의 소켓아이디 : "+socket.id);
@@ -171,6 +176,7 @@ $(function() {
 	        $('#scrollDiv').scrollTop($('#scrollDiv').prop('scrollHeight'));
     });
     
+    /** socket - 채팅 입력중 */
     socket.on('typing',function(data){
     	addTypingMessage(data.userName);
     });
@@ -190,6 +196,7 @@ $(function() {
     	$("#messageStatus").html($el);
     }
     
+    /** socket - 채팅 입력 멈춤 */
     socket.on("stop typing",function(data){
     	removeTypingMessage(data.userName);
     });
@@ -203,6 +210,7 @@ $(function() {
     	});
     }
     
+    /** socket - 채팅 파일 읽기 */
     socket.on('loadContent',function(data){
     	loadContent(data);
     });
@@ -240,6 +248,7 @@ $(function() {
     	$('#scrollDiv').scrollTop($('#scrollDiv').prop('scrollHeight'));
     }
     
+    /** socket - 채팅방 입장시 접속자 목록에 추가 */
     socket.on('addUserProfile', function(data){
         addUserToList(data.userName);
       });
@@ -270,6 +279,7 @@ $(function() {
         return COLORS[index];
       }
     
+    /** socket - 채팅방 나가면 접속자 목록에서 삭제 */
     socket.on('user left', function(data){
         removeUserFromList(data.userName);
       });
@@ -280,8 +290,8 @@ $(function() {
         }).remove();
       }
     
+    /** socket - 데스크탑 알림 메세지 전송 */
     socket.on('deskNotification',function(data){
-    	console.log("알림 소켓 뷰 확인");
     	var message = data.message;
     	var userName = data.userName;
     	var date = data.clock;
