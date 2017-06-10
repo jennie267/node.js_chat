@@ -88,6 +88,7 @@
   padding-bottom: 10px;
   font-size: 1.2em;
 }
+
 </style>
 <script
   src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
@@ -122,10 +123,11 @@
         id="chatpage">
         <div class="panel-heading" data-role="header">
            <i class="fa fa-comments fa-fw"></i> 채팅
-          <div class="btn-group pull-right">
-          <button class="fa fa-bell" id="notification" style="cursor:pointer;"></button>
-          <div class="text-right" style="display : inline-block;" id="userStatus"></div>
+          <div class="pull-right">
+          <div class="btn btn-default btn-xs" id="notification">
+          <i class="fa fa-bell" id="alarmBell" style="color : #999;"></i>
           </div>
+        </div>
         </div>
         <!-- /.panel-heading -->
         <div data-role="content">

@@ -108,7 +108,8 @@ $(function() {
         else {
            //데스크탑 알림 권한 요청 버튼을 비활성화
         	$("#notification").attr('disabled', 'disabled');
-        	$("#notification").css('background-color','#E5E5E5')
+        	$("#notification").css('color','white');
+        	$("#alarmBell").css('color','green');
            return;
          }
       });
