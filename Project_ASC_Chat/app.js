@@ -1,7 +1,6 @@
 var express = require('express')
   , session = require('express-session')
   , path = require('path')
-  , http = require('http')
   , sassMiddleware = require('node-sass-middleware')
   , cookieParser = require('cookie-parser')
   , bodyParser = require('body-parser')
