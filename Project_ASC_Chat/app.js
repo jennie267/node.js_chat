@@ -145,6 +145,7 @@ io.sockets.on('connection',function(socket){
 			socket.fullId = fullId;
 			
 			if(rooms[roomNum] === undefined) {
+				socket.joinedRoom = true;
 				console.log("새 방 팝니다. 방 번호 =" + roomNum );
 				rooms[roomNum] = new Room(fullId,roomNum);
 			} else {
@@ -305,7 +306,10 @@ io.sockets.on('connection',function(socket){
 	socket.on('disconnect',function(){
 		var userName = socket.userName;
 		var roomNum = socket.roomNum;
+		if(socket.joinedRoom && rooms[roomNum]){
+		var members = rooms[roomNum].members;
 		socket.leave(roomNum);
+		if (members[userName] === 1) {
 		--rooms[roomNum].numUsers;
 		rooms[roomNum].removeMember(userName);
 		
@@ -313,6 +317,10 @@ io.sockets.on('connection',function(socket){
 		socket.broadcast.to(roomNum).emit('user left', {
 	          userName: userName
 	        });
+		} else {
+				members[userName] -= 1;
+			    }
+		}
 	});
 	
 	

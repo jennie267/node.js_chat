@@ -138,9 +138,11 @@ $(function() {
     	console.log(userSockets);
     	console.log("뷰에서의 소켓아이디 : "+socket.id);
     	var output = "";
-    	output += "<li class='left clearfix'>";
+    	var nick = (data.userName).substring(1,3);
+    	  output += "<li class='left clearfix'>";
 	      output += "<span class='chat-img pull-left'>";
-	      output += "<img src='http://placehold.it/50/55C1E7/fff' alt='User Avatar' class='img-circle' />";
+	      //output += "<img src='http://placehold.it/50/55C1E7/fff' alt='User Avatar' class='img-circle' />";
+	      output += '<div class="circle ' + userColor(data.userName, false) + '">'+nick+'</div>';
 	      output += "</span>";
 	      output += "<div class='chat-body clearfix'>";
 	      output += "<div class='header'>";
@@ -160,9 +162,11 @@ $(function() {
     	var userSockets = data.userSockets;
     	console.log("뷰에서의 소켓아이디 : "+socket.id);
     	var output = "";
-    	output += "<li class='right clearfix'>";
+    	var nick = (data.userName).substring(1,3);
+    	  output += "<li class='right clearfix'>";
 	      output += "<span class='chat-img pull-right'>";
-	      output += "<img src='http://placehold.it/50/FA6F57/fff' alt='User Avatar' class='img-circle' />";
+	      //output += "<img src='http://placehold.it/50/55C1E7/fff' alt='User Avatar' class='img-circle' />";
+	      output += '<div class="circle ' + userColor(data.userName, false) + '">'+nick+'</div>';
 	      output += "</span>";
 	      output += "<div class='chat-body clearfix'>";
 	      output += "<div class='header'>";
@@ -218,10 +222,12 @@ $(function() {
     
     function loadContent(data) {
     	var output = "";
+    	var nick = (data.userName).substring(1,3);
     	if(userName === data.userName) {
           output += "<li class='right clearfix'>";
   	      output += "<span class='chat-img pull-right'>";
-  	      output += "<img src='http://placehold.it/50/FA6F57/fff' alt='User Avatar' class='img-circle' />";
+  	      //output += "<img src='http://placehold.it/50/FA6F57/fff' alt='User Avatar' class='img-circle' />";
+  	      output += '<div class="circle ' + userColor(data.userName, false) + '">'+nick+'</div>';
   	      output += "</span>";
   	      output += "<div class='chat-body clearfix'>";
   	      output += "<div class='header'>";
@@ -235,7 +241,8 @@ $(function() {
     	else {
     	  output += "<li class='left clearfix'>";
   	      output += "<span class='chat-img pull-left'>";
-  	      output += "<img src='http://placehold.it/50/55C1E7/fff' alt='User Avatar' class='img-circle' />";
+  	      //output += "<img src='http://placehold.it/50/55C1E7/fff' alt='User Avatar' class='img-circle' />";
+  	      output += '<div class="circle ' + userColor(data.userName, false) + '">'+nick+'</div>';
   	      output += "</span>";
   	      output += "<div class='chat-body clearfix'>";
   	      output += "<div class='header'>";
