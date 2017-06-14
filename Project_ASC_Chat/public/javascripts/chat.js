@@ -34,14 +34,18 @@ $(function() {
     // 메시지 전송버튼 클릭 이벤트 (JSON 통신)
     $("#chatsend").click(function (e) {
     	
+    	if(($("#messageInput").val()).length > 0 ) {
+    	
     	/** socket - 채팅 전송 */
     	socket.emit("sendMessage", {
     	projectId : projectId,
     	userName : userName,
         message: $("#messageInput").val()
       });
+    	}
     	
     	$("#messageInput").val("");
+    	$("#messageInput").focus();
     });
     
     // 메세지 엔터버튼
