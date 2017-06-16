@@ -294,6 +294,7 @@ $(function() {
     /** socket - 채팅방 나가면 접속자 목록에서 삭제 */
     socket.on('user left', function(data){
         removeUserFromList(data.userName);
+        removeTypingMessage(data.userName);
       });
     
     function removeUserFromList(userName) {

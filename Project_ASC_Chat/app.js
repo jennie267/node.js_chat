@@ -31,7 +31,6 @@ var client = mysql.createConnection({
 });
 
 var rooms = {};
-var userSockets = [];
 
 server.listen(port,function(){
 	console.log("connect server : " + port);
@@ -144,8 +143,8 @@ io.sockets.on('connection',function(socket){
 			socket.roomNum = roomNum;
 			socket.fullId = fullId;
 			
-			if(rooms[roomNum] === undefined) {
-				socket.joinedRoom = true;
+			socket.joinedRoom = true;
+			if(!rooms[roomNum]) {
 				console.log("새 방 팝니다. 방 번호 =" + roomNum );
 				rooms[roomNum] = new Room(fullId,roomNum);
 			} else {
@@ -164,9 +163,6 @@ io.sockets.on('connection',function(socket){
 			rooms[roomNum].addMember(userName);
 			/** socket - 채팅방 입장시 접속자 목록에 추가 */
 			updateSidebar(socket);
-			
-			userSockets.push(userSocket);
-			console.log(userSockets);
 			
 			/** chatting 폴더 생성 */
 			try{
@@ -210,7 +206,6 @@ io.sockets.on('connection',function(socket){
 	socket.on('sendMessage',function(data){
 		 var roomNum = socket.roomNum;
 		 var fullId = socket.fullId;
-		 console.log("참여한 사람들.." + userSockets);
 		 var clock = moment().format('LLLL');
 		 
 		 /** socket - 본인 채팅 오른쪽 출력 */
