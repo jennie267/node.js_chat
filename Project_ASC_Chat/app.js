@@ -280,7 +280,10 @@ io.sockets.on('connection',function(socket){
 			});
 		});
 	});
-	
+	//replaceAll prototype 선언
+	String.prototype.replaceAll = function(org, dest) {
+	    return this.split(org).join(dest);
+	}
 	/** socket - 회의록 내용 저장 */
 	socket.on('chatMemoSave',function(data){
 		var projectName = data.projectName;
@@ -288,7 +291,7 @@ io.sockets.on('connection',function(socket){
 		var minutes = data.minutes;
 		var date = data.date;
 		var roomNum = socket.roomNum;
-		var text = minutes;
+		var text = minutes.replaceAll("\n","\r\n");
 		var fileName = 'minutesFile/minutes_'+roomNum+'_'+userName+'.txt';
 		 
 		 fs.writeFile(fileName,text,'utf8',function(err){
