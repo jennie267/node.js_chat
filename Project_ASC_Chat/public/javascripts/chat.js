@@ -11,14 +11,8 @@ $(function() {
     var userSocket = $("#userSocket").val();
     var $users = $('.users');
     
-    var COLORS = ['pink darken-1', 'indigo',
-        'deep-orange darken-1', 'blue darken-2',
-        'deep-purple', 'purple darken-1',
-        'red darken-3','light-blue lighten-1'];
-    var COLORS_TEXT = ['pink-text darken-1', 'indigo-text',
-             'deep-orange-text darken-1', 'blue-text darken-2',
-             'deep-purple-text', 'purple-text darken-1',
-             'red-text darken-3', 'light-blue-text lighten-1'];
+    var COLORS = ['pink darken-1', 'indigo','deep-orange darken-1', 'blue darken-2','deep-purple', 'purple darken-1','red darken-3','light-blue lighten-1','deep-green'];
+    var COLORS_TEXT = ['pink-text darken-1', 'indigo-text','deep-orange-text darken-1', 'blue-text darken-2','deep-purple-text', 'purple-text darken-1','red-text darken-3', 'light-blue-text lighten-1'];
     var TYPING_TIMER = 500;
     var typing = false;
     var lastTypingTime;
@@ -89,11 +83,6 @@ $(function() {
         	minutes: $("#chatMemo").val(),
             date: new Date().toUTCString()
           });
-    });
-    
-    // 회의록 다운로드 이벤트
-    $("#minutesDownload").click(function(){
-    	console.log("다운로드 누름");
     	var url = "/minutesDownload/minutes_" + projectId + "_" + userName;  
         window.open(url, "_blank");
     });
@@ -283,11 +272,12 @@ $(function() {
     function userColor(user, forText) {
         var hash = 2;
         for (var i = 0; i < user.length; i++) {
-          hash = user.charCodeAt(i) + (hash<<2);
+          hash = user.charCodeAt(i) + (hash<<2) - 3;
         }
-        var index = hash % COLORS.length;
-        if (forText)
+        var index = hash % (COLORS.length);
+        if (forText){
           return COLORS_TEXT[index];
+        }
         return COLORS[index];
       }
     
