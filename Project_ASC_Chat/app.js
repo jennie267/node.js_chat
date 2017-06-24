@@ -33,7 +33,7 @@ var client = mysql.createConnection({
 var rooms = {};
 
 server.listen(port,function(){
-	console.log("connect server : " + port);
+	//서버 연결
 });
 
 // environments (사용환경)
@@ -75,8 +75,6 @@ app.get('/chats/:id',function(request,response){
 		request.session.username = results1[0].name; // 세션에 이름 저장
 		
 		
-		console.log("[test] 유저 이름 출력 : " + userName);
-		console.log("[test] 유저 이름 출력 (세션) : " + request.session.username); 
 		
 		client.query('SELECT * FROM project_list WHERE project_list_no = ?', projectId, function(err, results2) {
 			if (err) throw err;
@@ -84,8 +82,6 @@ app.get('/chats/:id',function(request,response){
 			projectName = results2[0].project_name;
 			request.session.projectName = results2[0].project_name; // 세션에 이름 저장
 			
-			console.log("[test] 프로젝트 이름 출력 : " + projectName);
-			console.log("[test] 프로젝트 이름 출력 (세션) : " + request.session.projectName); 
 			
 			response.render('chatView', {
 				  private: true,
@@ -106,10 +102,7 @@ app.get('/chats/:id',function(request,response){
  */
 app.get("/minutesDownload/:file",function(request,response){
 	var fileName = request.params.file + '.txt';
-	console.log("들어오는지 확인" + fileName);
-	console.log("들어오는지 확인" + __dirname);
 	var filepath = __dirname + '/minutesFile/' + fileName;
-	console.log("들어오는지 확인" + filepath);
 	response.download(filepath,fileName,function(err){
 		if (err) throw err;
 	});
@@ -124,19 +117,16 @@ io.sockets.on('connection',function(socket){
 	
 	/** socket join */
 	socket.on('join',function(projectId){
-		console.log('socket : ' + socket.id);
 		socket.join(projectId);
 	});
 	
 	/** socket - 채팅방 입장 */
 	socket.on('enterChatting',function(data){
-			console.log("roomNum 방 소켓 접속");
 			var roomNum = data.projectId;
 			var fullId = data.fullId;
 			var userId = data.userId;
 			var userName = data.userName;
 			var userSocket = data.userSocket;
-			console.log("값 넘어오는지 확인 : " + roomNum + fullId + userId + userName + userSocket);
 			
 			socket.userId = userId;
 			socket.userName = userName;
@@ -145,10 +135,8 @@ io.sockets.on('connection',function(socket){
 			
 			socket.joinedRoom = true;
 			if(!rooms[roomNum]) {
-				console.log("새 방 팝니다. 방 번호 =" + roomNum );
 				rooms[roomNum] = new Room(fullId,roomNum);
 			} else {
-			console.log("roomNum 소켓 접속 방 이미 있음");
 			}
 			
 			if (!rooms[roomNum].contains(userName)) {
@@ -184,12 +172,10 @@ io.sockets.on('connection',function(socket){
 			/** 채팅 내용 파일저장 */
 			 fs.appendFile(fileName,text,'utf8',function(err){
 				 if (err) throw err;
-				 console.log("채팅 파일에 쓰기 테스트");
 			 });
 			 /** 회의록 내용 파일저장 */
 			 fs.appendFile(fileName2,text,'utf8',function(err){
 				 if (err) throw err;
-				 console.log("회의록 파일에 쓰기 테스트1");
 			 });
 		});
 		
@@ -234,7 +220,6 @@ io.sockets.on('connection',function(socket){
 		 
 		 fs.appendFile(fileName,text,'utf8',function(err){
 			 if (err) throw err;
-			 console.log("파일에 쓰기 테스트 message");
 		 });
 		 
 	});
@@ -268,7 +253,6 @@ io.sockets.on('connection',function(socket){
 		});
 		
 		rl.on('line',function(line){
-			console.log("파일 읽기 테스트...");
 			var splitedContent = line.split("///");
 			var date = splitedContent[0];
 			var userName = splitedContent[1];
@@ -296,7 +280,6 @@ io.sockets.on('connection',function(socket){
 		 
 		 fs.writeFile(fileName,text,'utf8',function(err){
 			 if (err) throw err;
-			 console.log("회의록 내용 파일에 쓰기 테스트2");
 		 });
 	});
 

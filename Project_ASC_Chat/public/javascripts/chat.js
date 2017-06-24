@@ -60,14 +60,12 @@ $(function() {
         if (!typing) {
           typing = true;
           socket.emit('typing');
-          console.log("쓰는중");
         }
         lastTypingTime = (new Date).getTime();
         setTimeout(function(){
           var timer = (new Date).getTime();
           var timeDiff = timer - lastTypingTime;
           if (timeDiff >= TYPING_TIMER && typing) {
-        	  console.log("멈춤");
             socket.emit('stop typing');
             typing = false;
           }
@@ -76,7 +74,6 @@ $(function() {
     
     // 회의록 저장 이벤트
     $("#minutesSave").click(function(){
-    	console.log("저장하기 누름");
     	socket.emit("chatMemoSave", {
     		projectName : projectName,
         	userName : userName,
@@ -89,7 +86,6 @@ $(function() {
     
     // 데스크탑 알림 이벤트
     $("#notification").click(function(){
-    	console.log("알림온 클릭");
     	//데스크탑 알림 권한 요청
         Notification.requestPermission(function (result) {
 
@@ -128,8 +124,6 @@ $(function() {
     /** socket - 다른 사람 채팅 왼쪽 출력 */
     socket.on("sendMessageOthers",function(data){
     	var userSockets = data.userSockets;
-    	console.log(userSockets);
-    	console.log("뷰에서의 소켓아이디 : "+socket.id);
     	var output = "";
     	var nick = (data.userName).substring(1,3);
     	  output += "<li class='left clearfix'>";
@@ -153,7 +147,6 @@ $(function() {
     /** socket - 본인 채팅 오른쪽 출력 */
     socket.on("sendMessageMine",function(data){
     	var userSockets = data.userSockets;
-    	console.log("뷰에서의 소켓아이디 : "+socket.id);
     	var output = "";
     	var nick = (data.userName).substring(1,3);
     	  output += "<li class='right clearfix'>";
@@ -298,7 +291,6 @@ $(function() {
     	var message = data.message;
     	var userName = data.userName;
     	var date = data.clock;
-    	console.log("알림소켓 값 확인" + userName + message + date);
     	var icon = "/images/noimage.png";
     	
         if (message !== null && message.length > 0) {
